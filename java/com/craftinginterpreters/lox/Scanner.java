@@ -37,6 +37,7 @@ class Scanner {
   }
 
   private void scanToken() {
+    //for all single length characters we consume and pick a token type for it
     char c = advance();
     switch (c) {
       case '(':
@@ -69,17 +70,23 @@ class Scanner {
       case '*':
         addToken(STAR);
         break;
+      default:
+        Lox.error(line, "Unexpected character.");
+        break;
     }
   }
 
+  //helper function that tells us if we've consumed all the characters
   private boolean isAtEnd() {
     return current >= source.length();
   }
 
+  //consumes the next character in the source file and returns it
   private char advance() {
     return source.charAt(current++);
   }
 
+  //grabs the text of the current lexeme and creates a new token for it
   private void addToken(TokenType type) {
     addToken(type, null);
   }
