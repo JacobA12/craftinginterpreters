@@ -40,6 +40,7 @@ class Scanner {
     //for all single length characters we consume and pick a token type for it
     char c = advance();
     switch (c) {
+      //single character lexemes
       case '(':
         addToken(LEFT_PAREN);
         break;
@@ -69,6 +70,19 @@ class Scanner {
         break;
       case '*':
         addToken(STAR);
+        break;
+      //single character lexemes that can be combined to be dual character lexemes
+      case '!':
+        addToken(match('=') ? BANG_EQUAL : BANG);
+        break;
+      case '=':
+        addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+        break;
+      case '<':
+        addToken(match('=') ? LESS_EQUAL : LESS);
+        break;
+      case '>':
+        addToken(match('=') ? GREATER_EQUAL : GREATER);
         break;
       default:
         Lox.error(line, "Unexpected character.");
