@@ -84,10 +84,34 @@ class Scanner {
       case '>':
         addToken(match('=') ? GREATER_EQUAL : GREATER);
         break;
+      //special case division/comment
+      case '/':
+        if (match('/')) {
+          //A comment goes until the end of the line.
+          while (peek() != '\n' && !isAtEnd()) advance();
+        } else {
+          addToken(SLASH);
+        }
+        break;
       default:
         Lox.error(line, "Unexpected character.");
         break;
     }
+  }
+
+  //similar to advance, but only consumes character if it is what we're looking for
+  private boolean match(char expected) {
+    if (isAtEnd()) return false;
+    if (source.charAt(current) != expected) return false;
+
+    current++;
+    return true;
+  }
+
+  //similar to advance but does not consume the character
+  private char peek() {
+    if (isAtEnd()) return '\0';
+    return source.charAt(current);
   }
 
   //helper function that tells us if we've consumed all the characters
