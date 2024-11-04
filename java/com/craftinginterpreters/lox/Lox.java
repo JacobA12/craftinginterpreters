@@ -37,4 +37,14 @@ public class Lox {
       run(line);
     }
   }
+
+  private static void run(String source){
+    Scanner scanner = new Scanner(source);
+    List<Token> tokens = scanner.scanTokens();
+
+    //just print the tokens, for now
+    for(Token token : tokens){
+      System.out.println(token);
+    }
+  }
 }
