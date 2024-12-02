@@ -102,11 +102,37 @@ class Scanner {
       case'\n':
         line++;
         break;
+        //Strings
+      case '"': string(); break;
+
       default:
+        if(isDigit(c)){
+          number();
+        }
         Lox.error(line, "Unexpected character.");
         break;
     }
   }
+
+  private void string() {
+    while(peek() != '"' && !isAtEnd()) {
+      if(peek() == '\n') line++;
+      advance();
+    }
+
+    if(isAtEnd()){
+      Lox.error(line, "Unterminated string.");
+      return;
+    }
+
+    //The closing ".
+    advance();
+
+    //Trim the surrounding quotes.
+    String value = source.substring(start + 1, current - 1);
+    addToken(STRING, value);
+  }
+
 
   //similar to advance, but only consumes character if it is what we're looking for
   private boolean match(char expected) {
@@ -121,6 +147,10 @@ class Scanner {
   private char peek() {
     if (isAtEnd()) return '\0';
     return source.charAt(current);
+  }
+
+  private boolean isDigit(char c){
+    return c >= '0' && c <= '9';
   }
 
   //helper function that tells us if we've consumed all the characters
